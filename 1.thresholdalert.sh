@@ -12,3 +12,8 @@ if [ "$USAGE" -gt "$THRESHOLD" ]; then
 else
   echo "Disk usage is below $THRESHOLD%. Current usage: $USAGE%."
 fi
+
+
+##sed editior , s- substition , % pattern match  // replace with nothin , g gloabl apply the s in the string
+#s/%//g replace empty
+#s/%/:/g replace with :

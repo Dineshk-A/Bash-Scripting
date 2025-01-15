@@ -1,0 +1,47 @@
+Let's break down the command:
+
+
+
+bash
+Copy code
+$(df / | grep / | awk '{ print $5 }' | sed 's/%//g')
+This is a command substitution ($(...)) that executes the commands inside the parentheses and returns the result. Here's how each part works:
+
+1. df /
+df is a command that shows the disk space usage of file systems. By default, it gives an output like this:
+
+Filesystem     1K-blocks    Used Available Use% Mounted on
+/dev/sda1       1024000  512000   512000  50% /
+The / argument specifies that we're interested in the disk usage for the root directory /.
+The output from this command looks like this:
+
+Filesystem     1K-blocks    Used Available Use% Mounted on
+/dev/sda1       1024000  512000   512000  50% /
+
+2. grep /
+grep is used to filter lines in a text stream based on a pattern. In this case, it looks for any line that contains /.
+
+This command filters the output from df / to only include the line containing the root filesystem (/). The root filesystem is typically the one mounted at /, so this step will filter out the header line and keep the line with the usage statistics for /.
+After this command, you'll have:
+
+/dev/sda1       1024000  512000   512000  50% /
+3. awk '{ print $5 }'
+awk is a powerful text-processing tool. Here it's used to extract the fifth field (column) from the output.
+
+$5 refers to the fifth column in the filtered output, which in the case of the df command corresponds to the "Use%" field. This represents the percentage of disk usage.
+Given the output:
+
+/dev/sda1       1024000  512000   512000  50% /
+The fifth column is 50%. So this command will output:
+
+50%
+
+4. sed 's/%//g'
+sed is a stream editor for modifying text. Here it's used to remove the % character from the output.
+
+s/%//g is a substitution command that searches for % characters (%) and replaces them with nothing (i.e., it deletes them). The g at the end means "global", i.e., replace all occurrences (although here there's only one occurrence of %).
+So, the 50% output from awk will be transformed into:
+
+5. $(...)
+Finally, the entire command is wrapped in $(...), which is command substitution. This means that the entire command will be executed, and its result (in this case, 50) will replace the $(...) in the command line.
+
